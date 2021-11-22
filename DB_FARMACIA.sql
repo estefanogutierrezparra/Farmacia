@@ -1,0 +1,195 @@
+CREATE DATABASE dbFARMACIA 
+DEFAULT CHARACTER SET utf8;
+
+USE dbFARMACIA; 
+
+CREATE TABLE UBIGEO
+(
+	CODUBI CHAR(6) NOT NULL,
+    PROUBI VARCHAR(70) NOT NULL,
+    DEPUBI VARCHAR(70) NOT NULL,
+    DISUBI VARCHAR(70) NOT NULL,
+    CONSTRAINT CODUBI_PK PRIMARY KEY (CODUBI)
+);
+
+CREATE TABLE EMPLEADO
+(
+    CODEMP CHAR(4) NOT NULL,
+    NOMEMP VARCHAR(40) NOT NULL,
+    APEPATEMP VARCHAR(70) NOT NULL,
+    APEMATEMP VARCHAR(70) NOT NULL,
+    FECNACEMP DATE NOT NULL,
+    TELEMP INT,
+    EMAEMP VARCHAR(50) NOT NULL,
+    DNIEMP CHAR(8) NOT NULL,
+    DOMEMP VARCHAR(70) NOT NULL,
+    CODUBI VARCHAR(6) NOT NULL,
+    CONSTRAINT CODEMP_PK PRIMARY KEY (CODEMP)
+);
+
+CREATE TABLE CLIENTE
+(
+    CODCLI CHAR(4) NOT NULL,
+    NOMCLI VARCHAR(40) NOT NULL,
+    APEPATCLI VARCHAR(70) NOT NULL,
+    APEMATCLI VARCHAR(70) NOT NULL,
+    TELCLI INT,
+    DNICLI CHAR(8) NOT NULL,
+    DOMCLI VARCHAR(70) NOT NULL,
+    CODUBI VARCHAR(6) NOT NULL,
+    CONSTRAINT CODCLI_PK PRIMARY KEY (CODCLI)
+);
+
+CREATE TABLE MEDICAMENTO 
+(
+    CODMED CHAR(4) NOT NULL,
+    FECVENMED DATE NOT NULL,
+    DESMED VARCHAR(100) NOT NULL,
+    NOMMED VARCHAR(40) NOT NULL,
+    PREMED DECIMAL(10,2) NOT NULL,
+    STOMED INT NOT NULL,
+    CONSTRAINT CODMED_PK PRIMARY KEY (CODMED)
+);
+
+CREATE TABLE VENTA
+(
+    CODVEN CHAR(4) NOT NULL,
+    FECVEN DATE NOT NULL,
+    CODCLI CHAR(4) NOT NULL,
+	CODEMP CHAR(4) NOT NULL,
+    CONSTRAINT CODVEN_PK PRIMARY KEY (CODVEN)
+);
+
+CREATE TABLE VENTA_DETALLE
+(
+    CODVENDET CHAR(6) NOT NULL,
+    DESVENDET INT NOT NULL,
+    CANT INT NOT NULL,
+    CODMED CHAR(4) NOT NULL,
+    CODVEN CHAR(4) NOT NULL,
+    CONSTRAINT CODVENDET_PK PRIMARY KEY (CODVENDET)
+);
+
+/*Relacionando tablas: UBIGEO - EMPLEADO*/
+ALTER TABLE EMPLEADO 
+ADD CONSTRAINT UBIGEO_EMPLEADO_CODUBI
+FOREIGN KEY (CODUBI) REFERENCES UBIGEO (CODUBI);
+
+/*Relacionando tablas: UBIGEO - CLIENTE*/
+ALTER TABLE CLIENTE 
+ADD CONSTRAINT UBIGEO_CLIENTE_CODUBI
+FOREIGN KEY (CODUBI) REFERENCES UBIGEO (CODUBI);
+
+/*Relacionando tablas: EMPLEADO - VENTA*/
+ALTER TABLE VENTA
+ADD CONSTRAINT EMPLEADO_VENTA_CODEMP 
+FOREIGN KEY (CODEMP) REFERENCES EMPLEADO (CODEMP);
+
+/*Relacionando tablas: CLIENTE - VENTA*/
+ALTER TABLE VENTA
+ADD CONSTRAINT CLIENTE_VENTA_CODCLI
+FOREIGN KEY (CODCLI) REFERENCES CLIENTE (CODCLI);
+
+/*Relacionando tablas: VENTA - VENTA_DETALLE*/
+ALTER TABLE VENTA_DETALLE
+ADD CONSTRAINT VENTA_VENTA_DETALLE_CODVEN
+FOREIGN KEY (CODVEN) REFERENCES VENTA (CODVEN);
+
+/*Relacionando tablas: MEDICAMENTO - VENTA_DETALLE*/
+ALTER TABLE VENTA_DETALLE
+ADD CONSTRAINT MEDICAMENTO_VENTA_DETALLE_CODMED
+FOREIGN KEY (CODMED) REFERENCES MEDICAMENTO (CODMED);
+
+INSERT INTO UBIGEO (CODUBI, PROUBI, DEPUBI, DISUBI)
+VALUES
+("140401", "Cañete", "Lima", "San Vicente"),
+("140416", "Cañete", "Lima", "Asia"),
+("140403", "Cañete", "Lima", "Cerro Azul"),
+("140406", "Cañete", "Lima", "Imperial"),
+("140409", "Cañete", "Lima", "Nuevo Imperial");
+
+SELECT * FROM UBIGEO;
+
+INSERT INTO EMPLEADO (CODEMP, NOMEMP, APEPATEMP, APEMATEMP, FECNACEMP, TELEMP, EMAEMP, DNIEMP, DOMEMP, CODUBI)
+VALUES
+("E001", "Alejandra", "Alcala", "Guzmán", "1997-05-03", "952156742", "aleguzmán@gmail.com", "42388604", "Alfonso Ugarte", "140401"),
+("E002", "Pedro", "Arias", "Herrera", "1995-11-15", "915346157", "pedro.arias@gmail.com", "33562458", "Casa Asia", "140416"),
+("E003", "Karla", "Barrientos", "Ruíz", "1999-06-20", "914126582", "karla159@gmail.com", "06770109", "Av Las Américas", "140403"),
+("E004", "Stefany", "González", "Franco", "1996-03-30", "913426582", "tefyfranco@gmail.com", "07750457", "Jiron O Higgins", "140401"),
+("E005", "Felix", "Domínguez", "Cortéz", "1998-07-19", "956812461", "felix98@gmail.com", "25735046", "Santa Maria Alta", "140409"),
+("E006", "Jaime", "Arenas", "Durán", "2000-04-28", "954812753", "arenasjaime@gmail.com", "21261108", "Av 28 de Julio", "140406"),
+("E007", "Teresa", "Ponce", "Carrillo", "1998-08-14", "912751892", "terecarrillo@gmail.com", "46967914", "Av 2 de Mayo", "140406"),
+("E008", "Luis", "Estrada", "Ortíz", "1997-02-20", "974284621", "luis20297@gmail.com", "07756532", "Cerro Libre", "140409"),
+("E009", "Aurora", "Peredo", "Fernández", "2000-01-12", "913402475", "aurora_peredo@gmail.com", "45055499", "Av Ayacucho", "140406"),
+("E010", "Lilia", "Gallegos", "Ayala", "1999-12-19", "945751602","liliagallegos@gamil.com", "06224656", "Cementerio", "140406");
+
+
+SELECT * FROM EMPLEADO;
+
+INSERT INTO CLIENTE (CODCLI, NOMCLI, APEPATCLI, APEMATCLI, TELCLI, DNICLI, DOMCLI, CODUBI)
+VALUES
+("C001", "Angie", "Chuquihuaccha", "Levano", "978546456", "74563231", "Jr. Bellavista", "140401"),
+("C002", "Estefano", "Gutierrez", "Parra", "934698455", "75866267", "Casa Asia", "140416"),
+("C003", "Medaly", "Sanchez", "Medrano", "976658711", "75343945", "Jr. Comercio", "140403"),
+("C004", "Rey", "Vicente", "Saveedra", "983316321", "76214487", "Santa Maria Alta", "140409"),
+("C005", "Luciana", "Manrique", "Luyo", "917825667", "71665213", "Avenida Ayacucho", "140406"),
+("C006", "Monica", "Encizo", "Prada", "958872314", "72557899", "Santa Rosa", "140401"),
+("C007", "Xiomara", "Fernandez", "Jimenez", "984371893", "76223469", "Calle las Violetas", "140403"),
+("C008", "David", "Garcia", "Lopez", "942287367", "71583387", "Avenido 2 de Mayo", "140406"),
+("C009", "Angel", "Javier", "Gutierrez", "938861529", "79628176", "Calles los claveles", "140403"),
+("C010", "Eduardo", "Viale", "Mateo", "962837462", "71345701", "Cerro Libre", 140409);
+
+SELECT * FROM CLIENTE;
+
+INSERT INTO MEDICAMENTO (CODMED, FECVENMED, DESMED, NOMMED, PREMED,STOMED)
+VALUES
+("M001", "2022-12-15", "500mg - Tableta", "Paracetamol", "0.08", "100"),
+("M002", "2022-07-20", "400mg - Tableta", "Ibuprofeno", "0.10", "80"),
+("M003", "2023-09-13", "10mg - Tableta", "Loratadina", "0.10", "150"),
+("M004", "2023-05-30", "250mg - Tableta", "Amoxicilina", "0.50", "40"),
+("M005", "2024-07-08", "550mg - Tableta", "Naproxeno", "0.20", "65"),
+("M006", "2023-11-26", "5mg - Tableta", "Prednisona", "0.09", "100"),
+("M007", "2023-10-12", "4mg - Tableta", "Clorfenamina", "0.05", "40"),
+("M008", "2024-02-15", "500mg - Tableta", "Cefalexina", "0.40", "105"),
+("M009", "2023-12-29", "2mg - Elixir 100ml", "Dexametasona", "5.40", "94"),
+("M010", "2024-11-29", "500mg - Tableta", "Claritromicina", "0.56", "90");
+
+SELECT * FROM MEDICAMENTO;
+
+INSERT INTO VENTA (CODVEN, FECVEN, CODCLI, CODEMP)
+VALUES
+("V001", "2021-10-22", "C001", "E001"),
+("V002", "2021-10-24", "C002", "E001"),
+("V003", "2021-10-24", "C003", "E002"),
+("V004", "2021-10-25", "C004", "E003"),
+("V005", "2021-10-28", "C005", "E003"),
+("V006", "2021-11-01", "C006", "E004"),
+("V007", "2021-11-10", "C007", "E004"),
+("V008", "2021-11-13", "C008", "E005"),
+("V009", "2021-11-15", "C009", "E006"),
+("V010", "2021-11-16", "C010", "E006"),
+("V011", "2021-11-16", "C002", "E007"),
+("V012", "2021-11-17", "C004", "E008"),
+("V013", "2021-11-18", "C006", "E009"),
+("V014", "2021-11-18", "C008", "E010");
+
+SELECT * FROM VENTA;
+
+INSERT INTO VENTA_DETALLE (CODVENDET, DESVENDET, CANT, CODMED, CODVEN)
+VALUES
+("VDT001", "10", "5", "M001", "V001"),
+("VDT002", "10", "8", "M002", "V002"),
+("VDT003", "10", "4", "M003", "V003"),
+("VDT004", "15", "4", "M004", "V004"),
+("VDT005", "15", "6", "M005", "V005"),
+("VDT006", "15", "9", "M001", "V006"),
+("VDT007", "10", "5", "M004", "V007"),
+("VDT008", "17", "7", "M006", "V008"),
+("VDT009", "15", "6", "M007", "V009"),
+("VDT010", "15", "6", "M007", "V010"),
+("VDT011", "10", "5", "M002", "V011"),
+("VDT012", "18", "8", "M008", "V012"),
+("VDT013", "15", "3", "M009", "V013"),
+("VDT014", "17", "7", "M010", "V014");
+
+SELECT * FROM VENTA_DETALLE;
